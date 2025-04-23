@@ -3,12 +3,12 @@ package jdh.lr.tacocloud;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
-@Controller
+@Controller //Контроллер
 public class HomeController {
 
-    @GetMapping("/")
+    @GetMapping("/") //Обрабатывает запросы с корневым путём /
     public String home() {
-        return "home";
+        return "home"; //Возвращает имя представления
     }
 
 }

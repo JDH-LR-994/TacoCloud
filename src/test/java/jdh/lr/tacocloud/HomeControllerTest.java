@@ -10,18 +10,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTest(HomeController.class)
+@WebMvcTest(HomeController.class) //Тест для HomeController
 public class HomeControllerTest {
     @Autowired
-    private MockMvc mockMvc;
+    private MockMvc mockMvc; //Внедрить MockMvc
 
     @Test
     public void testHomePage() throws Exception {
-        mockMvc.perform(get("/"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("home"))
+        mockMvc.perform(get("/")) //Выполнить GET-запрос /
+                .andExpect(status().isOk()) // Ожидается код ответа HTTP 200
+                .andExpect(view().name("home")) // Ожидается имя представления home
                 .andExpect(content().string(
                         containsString("Welcome to...")
-                ));
+                )); //Ожидается наличие строки Welcome to...
     }
 }
