@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 public class DesignTacoController {
 
     @ModelAttribute
-    public void addIngredientToModel(Model model) {
+    public void addIngredientToModel( Model model ) {
         List<Ingredient> ingredients = Arrays.asList(
                 new Ingredient("FLTO", "Flour Tortilla", Ingredient.Type.WRAP),
                 new Ingredient("COTO", "Corn Tortilla", Ingredient.Type.WRAP),
@@ -39,7 +39,7 @@ public class DesignTacoController {
         );
 
         Type[] types = Ingredient.Type.values();
-        for (Type type : types) {
+        for ( Type type : types ) {
             model.addAttribute(type.toString().toLowerCase(),
                     filterByType(ingredients, type));
         }
@@ -61,8 +61,8 @@ public class DesignTacoController {
     }
 
     @PostMapping
-    public String processTaco(Taco taco,
-                              @ModelAttribute TacoOrder tacoOrder) {
+    public String processTaco( Taco taco,
+                               @ModelAttribute TacoOrder tacoOrder ) {
         tacoOrder.addTaco(taco);
         log.info("Processing taco: {}", taco);
 
@@ -70,7 +70,7 @@ public class DesignTacoController {
     }
 
     private Iterable<Ingredient> filterByType(
-            List<Ingredient> ingredients, Type type) {
+            List<Ingredient> ingredients, Type type ) {
         return ingredients
                 .stream()
                 .filter(x -> x.getType().equals(type))

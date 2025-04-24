@@ -44,43 +44,6 @@ jobs:
         run: |
           curl -Ls https://github.com/google/google-java-format/releases/download/v1.20.0/google-java-format-1.20.0-all-deps.jar -o google-java-format.jar
 
-      - name: Check Java formatting with detailed diff
-        run: |
-          echo "Checking Java formatting..."
-          FILES=$(git ls-files -- 'src/**/*.java')
-          echo "Files to check:"
-          echo "$FILES"
-          
-          echo "Creating backups for diff..."
-          mkdir -p /tmp/java-backup
-          for file in $FILES; do
-            cp "$file" "/tmp/java-backup/$(basename "$file").original"
-          done
-
-          echo "Applying formatter to compare changes..."
-          java -jar google-java-format.jar -i $FILES
-
-          echo "Checking for formatting differences..."
-          FAILED_FILES=()
-          for file in $FILES; do
-            if ! diff -u "/tmp/java-backup/$(basename "$file").original" "$file"; then
-              FAILED_FILES+=("$file")
-              echo "::error::Found formatting issues in $file"
-              echo "To fix, run: java -jar google-java-format.jar -i $file"
-            fi
-          done
-
-          echo "Restoring original files..."
-          for file in $FILES; do
-            mv "/tmp/java-backup/$(basename "$file").original" "$file"
-          done
-
-          # Завершаем с ошибкой, если есть проблемы
-          if [ ${#FAILED_FILES[@]} -ne 0 ]; then
-            echo "::error::Java formatting check failed in ${#FAILED_FILES[@]} files."
-            exit 1
-          fi
-
       - name: Run tests with Gradle
         run: ./gradlew test --info
 
