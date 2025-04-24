@@ -1,34 +1,30 @@
 package jdh.lr.tacocloud.web;
 
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import jdh.lr.tacocloud.Ingredient;
+import jdh.lr.tacocloud.Ingredient.Type;
 import jdh.lr.tacocloud.Taco;
 import jdh.lr.tacocloud.TacoOrder;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model; //Объект для общения представлений, ответственных за использование этих данных в HTML
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
-import lombok.extern.slf4j.Slf4j; //Simple Logging Facade for Java
-
-import jdh.lr.tacocloud.Ingredient;
-import jdh.lr.tacocloud.Ingredient.Type;
-
-@Slf4j //Генерит свойство типа Logger
-@Controller //Пометили как контроллер, чтобы среда автоматически могла создать экземпляр класса в виде bean - компонента
-@RequestMapping("/design") //Класс будет обрабатывать запросы пути, которые начинаются с /design
-@SessionAttributes("tacoOrder")  //Объект TacoOrder должен поддерживаться на уровне сеанса
+@Slf4j
+@Controller
+@RequestMapping("/design")
+@SessionAttributes("tacoOrder")
 public class DesignTacoController {
 
     @ModelAttribute
-    public void addIngredientToModel(Model model) //Создание списка ингредиентов для формы
-    {
+    public void addIngredientToModel(Model model) {
         List<Ingredient> ingredients = Arrays.asList(
                 new Ingredient("FLTO", "Flour Tortilla", Ingredient.Type.WRAP),
                 new Ingredient("COTO", "Corn Tortilla", Ingredient.Type.WRAP),
@@ -45,29 +41,28 @@ public class DesignTacoController {
         Type[] types = Ingredient.Type.values();
         for (Type type : types) {
             model.addAttribute(type.toString().toLowerCase(),
-                    filterByType(ingredients, type)); //Добавляем список типов ингредиентов в атрибуты Model
+                    filterByType(ingredients, type));
         }
     }
 
-    @ModelAttribute(name = "tacoOrder") //Создание того самого объекта для класса (26 строка)
+    @ModelAttribute(name = "tacoOrder")
     public TacoOrder order() {
         return new TacoOrder();
     }
 
-    @ModelAttribute(name = "taco") //Объект для формы
+    @ModelAttribute(name = "taco")
     public Taco taco() {
         return new Taco();
     }
 
-    @GetMapping //(В связке с классом) Помечает метод для обработки HTTP - запроса GET с путём /design
+    @GetMapping
     public String showDeignForm() {
         return "design";
     }
 
-    @PostMapping //Обрабатывает POST запрос с /design (Добавляет созданный тако в заказ)
+    @PostMapping
     public String processTaco(Taco taco,
-                              @ModelAttribute TacoOrder tacoOrder) //Использовать объект, помещённый в модель
-    {
+                              @ModelAttribute TacoOrder tacoOrder) {
         tacoOrder.addTaco(taco);
         log.info("Processing taco: {}", taco);
 
