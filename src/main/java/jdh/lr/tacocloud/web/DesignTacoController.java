@@ -64,6 +64,16 @@ public class DesignTacoController {
         return "design";
     }
 
+    @PostMapping //Обрабатывает POST запрос с /design (Добавляет созданный тако в заказ)
+    public String processTaco(Taco taco,
+                              @ModelAttribute TacoOrder tacoOrder) //Использовать объект, помещённый в модель
+    {
+        tacoOrder.addTaco(taco);
+        log.info("Processing taco: {}", taco);
+
+        return "redirect:/orders/current";
+    }
+
     private Iterable<Ingredient> filterByType(
             List<Ingredient> ingredients, Type type) {
         return ingredients
