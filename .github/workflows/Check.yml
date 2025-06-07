@@ -1,4 +1,4 @@
-name: CI Checks
+name: Checks
 
 on:
   push:
@@ -32,24 +32,15 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      - name: Cache Formatter
-        id: cache-formatter
-        uses: actions/cache@v3
-        with:
-          path: google-java-format.jar
-          key: google-java-format-1.20.0-${{ hashFiles('**/*.java') }}
-
-      - name: Download Formatter if not cached
-        if: steps.cache-formatter.outputs.cache-hit != 'true'
-        run: |
-          curl -Ls https://github.com/google/google-java-format/releases/download/v1.20.0/google-java-format-1.20.0-all-deps.jar -o google-java-format.jar
-
       - name: Run tests with Gradle
-        run: ./gradlew test --info
+        id: tests
+        run: ./gradlew test --info --no-daemon
 
       - name: Upload test results
-        if: always()
+        if: always() && steps.tests.outcome == 'failure'
         uses: actions/upload-artifact@v4
         with:
           name: test-results
-          path: build/test-results/test/**
+          path: |
+            build/test-results/test/**
+            build/reports/tests/test/**

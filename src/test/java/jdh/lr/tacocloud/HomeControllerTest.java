@@ -5,23 +5,24 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
+import jdh.lr.tacocloud.web.WebConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTest(HomeController.class) //Тест для HomeController
+@WebMvcTest(WebConfig.class)
 public class HomeControllerTest {
     @Autowired
-    private MockMvc mockMvc; //Внедрить MockMvc
+    private MockMvc mockMvc;
 
     @Test
     public void testHomePage() throws Exception {
-        mockMvc.perform(get("/")) //Выполнить GET-запрос /
-                .andExpect(status().isOk()) // Ожидается код ответа HTTP 200
-                .andExpect(view().name("home")) // Ожидается имя представления home
+        mockMvc.perform(get("/"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("home")) 
                 .andExpect(content().string(
                         containsString("Welcome to...")
-                )); //Ожидается наличие строки Welcome to...
+                ));
     }
 }
